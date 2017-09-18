@@ -45,4 +45,29 @@ class shopReugroupPlugin extends shopPlugin
 
         return $cats;
     }
+
+    /**
+     * Копия метода из shopHelper от Shop-Script 7.
+     * Чтобы работало и на более ранних
+     *
+     * @param bool|false $verbose
+     */
+    protected function getStorefornts($verbose = false)
+    {
+        $storefronts = array();
+        foreach (wa()->getRouting()->getByApp('shop') as $domain => $domain_routes) {
+            foreach ($domain_routes as $route) {
+                $url = rtrim($domain . '/' . $route['url'], '/*') . '/';
+                if ($verbose) {
+                    $storefronts[] = array(
+                        'domain' => $domain,
+                        'route'  => $route,
+                        'url'    => $url
+                    );
+                } else {
+                    $storefronts[] = $url;
+                }
+            }
+        }
+    }
 }
