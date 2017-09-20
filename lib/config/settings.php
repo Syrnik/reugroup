@@ -15,7 +15,9 @@ return array(
     ),
     'by_storefront' => array(
         'title'        => 'Условия для витрин',
-        'description'  => 'Если нужно, здесь можно определить условия для отдельных витрин',
+        'description'  => 'Если нужно, здесь можно определить условия для отдельных витрин. Также можно создать ' .
+            'несколько правил для одной витрины и пользователь будет добавлен в несколько категорий.<br>' .
+            '<i class="icon10 exclamation" style="vertical-align:middle"></i><b>Внимание!</b>. Настроенные здесь правила <b>замещают</b> основную настройку!',
         'control_type' => 'ByStorefront',
         'value'        => array('enabled' => 0, 'table' => array(array('storefront' => '', 'category_id' => '')))
     )
