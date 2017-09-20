@@ -47,7 +47,7 @@ class shopReugroupPlugin extends shopPlugin
                 if ($rule['storefront'] != $storefront) {
                     continue;
                 }
-                if (!($category_id = $ContactCategory->getByField('id', $rule['category_id'], 'id', 1))) {
+                if (!($category_id = $ContactCategory->select('id')->where('id=:id', array('id' => $rule['category_id']))->fetchField())) {
                     continue;
                 }
 
@@ -61,7 +61,7 @@ class shopReugroupPlugin extends shopPlugin
                 // проверим на всякий случай есть-ли еще такая категория
                 // а то вдруг ее какой-нибудь дурак удалил, а в настройке плагина она осталась
                 // ресурсов на проверку нужно мало, а дураков на свете много
-                $category_id = $ContactCategory->getByField('id', $category_id, 'id', 1);
+                $category_id = $ContactCategory->select('id')->where('id=:id', array('id' => $category_id))->fetchField();
 
                 if ($category_id) {
                     $categories[] = $category_id;
