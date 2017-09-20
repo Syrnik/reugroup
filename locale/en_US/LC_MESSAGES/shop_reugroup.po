@@ -1,0 +1,35 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: shop/plugins/reugroup\n"
+"POT-Creation-Date: 2017-09-20 13:21+0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator:  shop/plugins/reugroup\n"
+"Language-Team:  shop/plugins/reugroup\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: en_US\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: .\n"
+
+#: /wa-apps/shop/plugins/reugroup/lib/shopReugroupPlugin.class.php:150
+msgid "Storefront"
+msgstr ""
+
+#: /wa-apps/shop/plugins/reugroup/lib/shopReugroupPlugin.class.php:151
+msgid "Category"
+msgstr ""
+
+#: /wa-apps/shop/plugins/reugroup/lib/shopReugroupPlugin.class.php:151
+msgid "Add rule"
+msgstr ""
+
+#: /wa-apps/shop/plugins/reugroup/lib/shopReugroupPlugin.class.php:153
+msgid "Add"
+msgstr ""
+
+#: /wa-apps/shop/plugins/reugroup/lib/shopReugroupPlugin.class.php:174
+msgid "Delete rule"
+msgstr ""
