@@ -25,17 +25,54 @@ class shopReugroupPlugin extends shopPlugin
      */
     public function handlerSignup($contact)
     {
-        $category_id = $this->getSettings('category_id');
+        if (!($contact instanceof waContact) || !$contact->getId()) {
+            return;
+        }
+
         $ContactCategory = new waContactCategoryModel();
 
-        // проверим на всякий случай есть-ли еще такая категория
-        // а то вдруг ее какой-нибудь дурак удалил, а в настройке плагина она осталась
-        // ресурсов на проверку нужно мало, а дураков на свете много
-        $category_id = $ContactCategory->select('id')->where('id=:id', array('id' => $category_id))->fetchField();
+        $categories = array();
+        $by_storefront = $this->getSettings('by_storefront');
+        $is_frontend = wa()->getEnv() == 'frontend';
 
-        if (($contact instanceof waContact) && $contact->getId() && $category_id) {
+        if ($is_frontend && (bool)ifempty($by_storefront['enabled'], false)) {
+            $rules = (array)ifempty($by_storefront['table'], array());
+            $storefront = wa()->getRouting()->getDomain() . '/' . wa()->getRouting()->getRoute('url');
+            $storefront = rtrim($storefront, '*');
+
+            foreach ($rules as $rule) {
+                if (!is_array($rule) || !ifempty($rule['storefront']) || !isset($rule['category_id'])) {
+                    continue;
+                }
+                if ($rule['storefront'] != $storefront) {
+                    continue;
+                }
+                if (!($category_id = $ContactCategory->getByField('id', $rule['category_id'], 'id', 1))) {
+                    continue;
+                }
+
+                $categories[] = $category_id;
+            }
+        }
+
+        if (!$categories) {
+            $category_id = $this->getSettings('category_id');
+            if ($category_id) {
+                // проверим на всякий случай есть-ли еще такая категория
+                // а то вдруг ее какой-нибудь дурак удалил, а в настройке плагина она осталась
+                // ресурсов на проверку нужно мало, а дураков на свете много
+                $category_id = $ContactCategory->getByField('id', $category_id, 'id', 1);
+
+                if ($category_id) {
+                    $categories[] = $category_id;
+                }
+            }
+        }
+
+
+        if ($categories) {
             $ContactCategories = new waContactCategoriesModel();
-            $ContactCategories->add($contact->getId(), $category_id);
+            $ContactCategories->add($contact->getId(), $categories);
         }
     }
 
