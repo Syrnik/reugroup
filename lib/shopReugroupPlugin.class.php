@@ -127,7 +127,7 @@ HTML;
             $html .= waHtmlControl::getControl(waHtmlControl::SELECT, 'storefront', $row_params + array('value' => $p['storefront'], 'options' => $storefronts_options));
             $html .= '<td class="min-width">⇒</td>';
             $html .= waHtmlControl::getControl(waHtmlControl::SELECT, 'category_id', $row_params + array('value' => $p['category_id'], 'options' => $categories_options));
-            $html .= '<td class="min-width"><a href="javascript:void(0);" class="js-delete-rule"><i class="icon16 delete"></i></a></td>';
+            $html .= '<td class="min-width"><a href="javascript:void(0);" class="js-delete-rule" title="' . _wp('Delete rule') . '"><i class="icon16 delete"></i></a></td>';
             $html .= '</tr>';
         }
 
