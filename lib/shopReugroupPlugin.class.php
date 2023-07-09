@@ -21,7 +21,8 @@ class shopReugroupPlugin extends shopPlugin
     /**
      * Обработчик хука signup
      *
-     * @param waContact $contact
+     * @param waContact|mixed $contact
+     * @throws waException
      */
     public function handlerSignup($contact)
     {
@@ -76,14 +77,20 @@ class shopReugroupPlugin extends shopPlugin
         }
     }
 
-    public static function listGroups()
+    /**
+     * @return array[]
+     */
+    public static function listGroups(): array
     {
         $ContactCategory = new waContactCategoryModel();
 
-        $categories = $ContactCategory->select('*')->where("app_id='shop'")->order('name')->fetchAll();
-        $cats = array(array('value' => '', 'title' => ''));
+        $categories = $ContactCategory->select('*')
+                                      ->where("app_id='shop'")
+                                      ->order('name')
+                                      ->fetchAll();
+        $cats = [['value' => '', 'title' => '']];
         foreach ($categories as $category) {
-            $cats[] = array('value' => $category['id'], 'title' => htmlentities($category['name'], null, 'UTF-8'));
+            $cats[] = ['value' => $category['id'], 'title' => waString::escape($category['name'])];
         }
 
         return $cats;
@@ -95,7 +102,7 @@ class shopReugroupPlugin extends shopPlugin
      * @return string
      * @throws waException
      */
-    public function settingByStorefront($name, $params = array())
+    public function settingByStorefront($name, array $params = []): string
     {
         $default_params = array(
             'title'         => '',
@@ -144,7 +151,7 @@ class shopReugroupPlugin extends shopPlugin
             'Storefront' => _wp('Storefront'),
             'Category'   => _wp('Category'),
             'Add rule'   => _wp('Add rule'),
-//            'Add help' => _wp('Add')
+            //            'Add help' => _wp('Add')
         );
 
         $html .= <<<HTML
@@ -161,7 +168,7 @@ HTML;
             unset($row_params['value']);
             waHtmlControl::addNamespace($row_params, $i);
             $row_params['control_wrapper'] = '<td>%2$s</td>';
-            $html .= waHtmlControl::getControl(waHtmlControl::SELECT, 'storefront', $row_params + array('value' => $p['storefront'], 'options' => $storefronts_options));
+            $html .= waHtmlControl::getControl(waHtmlControl::SELECT, 'storefront', $row_params + ['value' => $p['storefront'], 'options' => $storefronts_options]);
             $html .= '<td class="min-width">⇒</td>';
             $html .= waHtmlControl::getControl(waHtmlControl::SELECT, 'category_id', $row_params + array('value' => $p['category_id'], 'options' => $categories_options));
             $html .= '<td class="min-width"><a href="javascript:void(0);" class="js-delete-rule" title="' . _wp('Delete rule') . '"><i class="icon16 delete"></i></a></td>';
@@ -208,13 +215,14 @@ HTML;
 
     /**
      * @return array
+     * @throws waException
      */
-    public function optionsStorefronts()
+    public function optionsStorefronts(): array
     {
         $storefronts = $this->getStorefornts();
-        $options = array();
+        $options = [];
         foreach ($storefronts as $s) {
-            $options[] = array('title' => $s, 'value' => $s);
+            $options[] = ['title' => $s, 'value' => $s];
         }
 
         return $options;
@@ -224,10 +232,14 @@ HTML;
      * Копия метода из shopHelper от Shop-Script 7.
      * Чтобы работало и на более ранних
      *
-     * @param bool|false $verbose
+     * @see shopHelper::getStorefronts()
+     * @see shopStorefrontList::getAllStorefronts()
+     *
+     * @param bool $verbose
      * @return array
+     * @throws waException
      */
-    protected function getStorefornts($verbose = false)
+    protected function getStorefornts(bool $verbose = false): array
     {
         $storefronts = array();
         foreach (wa()->getRouting()->getByApp('shop') as $domain => $domain_routes) {
